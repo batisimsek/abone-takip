@@ -1,4 +1,4 @@
-name: Publish Abone Takip
+name: Publish apps to GitHub Pages
 
 on:
   push:
@@ -21,10 +21,19 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v4
+      - name: Assemble apps
+        run: |
+          mkdir -p _site
+          cp -a dist/. _site/
+          mkdir -p _site/anet
+          cp -a anet/. _site/anet/
+          touch _site/.nojekyll
+          test -f _site/doruk-mac/index.html
+          test -f _site/anet/index.html
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:
-          path: dist
+          path: _site
       - uses: actions/deploy-pages@v4
         id: deployment
